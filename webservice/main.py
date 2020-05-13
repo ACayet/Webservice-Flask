@@ -11,6 +11,8 @@ main = Blueprint('main', __name__)
 def record_payment():
     query_parameters = request.json
 
+    payment_email = query_parameters.get('m_email')
+    payment_username = query_parameters.get('m_username')
     payment_name = query_parameters.get('m_designation')
     payment_date = query_parameters.get('m_date')
     payment_montant = query_parameters.get('m_montant')
@@ -18,10 +20,12 @@ def record_payment():
 
     paiements_collection = mongo.db.paiements
     try:
-        paiements_collection.insert_one({"designation":payment_name,
-                                     "date":payment_date, 
-                                     "montant":payment_montant, 
-                                     "mode":payment_mode})
+        paiements_collection.insert_one({"nom": payment_username,
+                                    "email": payment_email,
+                                    "designation":payment_name,
+                                    "date":payment_date, 
+                                    "montant":payment_montant, 
+                                    "mode":payment_mode})
     except mongo.errors.WriteError as e :
         return "Erreur dans l'ajout du paiement : %s" % e, 400
     
